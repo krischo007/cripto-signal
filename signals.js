@@ -1,4 +1,6 @@
-const DISCORD_WEBHOOK_URL = "ТУК_СЛАГАШ_ТВОЯ_WEBHOOK_URL";
+import fetch from "node-fetch";
+
+const DISCORD_WEBHOOK_URL = "ТУК_ТВОЯ_WEBHOOK_URL";
 
 async function sendDiscordSignal() {
   const message = {
@@ -14,14 +16,17 @@ BTC
 ⏱ Генерирано автоматично`
   };
 
-  await fetch(DISCORD_WEBHOOK_URL, {
+  const res = await fetch(DISCORD_WEBHOOK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(message)
   });
 
+  if (!res.ok) {
+    throw new Error("Discord webhook failed");
+  }
+
   console.log("Signal sent to Discord");
 }
 
 sendDiscordSignal();
-
