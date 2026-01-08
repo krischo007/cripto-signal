@@ -1,19 +1,27 @@
-const { execSync } = require("child_process");
+name: NeLex Signals Test
 
-const DISCORD_WEBHOOK_URL = "ТУК_ТВОЯ_WEBHOOK_URL";
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
 
-const payload = JSON.stringify({
-  content: `📊 **Crypto Signal Test**
+jobs:
+  run:
+    runs-on: ubuntu-latest
 
-BTC
-Вход: 100 000 USD
-Изход 1: 105 000 USD (+5%)
-Изход 2: 107 000 USD (+7%)
-Стоп: 99 000 USD (-1%)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-⏱ GitHub Actions test`
-});
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-execSync(`curl -X POST -H "Content-Type: application/json" -d '${payload}' ${DISCORD_WEBHOOK_URL}`);
+      - name: Install dependencies
+        run: npm install
 
-console.log("Signal sent to Discord");
+      - name: Run signals
+        run: node signals.js
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
