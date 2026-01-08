@@ -1,16 +1,19 @@
-name: NeLex Signals Test
+const { execSync } = require("child_process");
 
-on:
-  schedule:
-    - cron: "*/5 * * * *"
-  workflow_dispatch:
+const DISCORD_WEBHOOK_URL = "ТУК_ТВОЯ_WEBHOOK_URL";
 
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: node signals.js
+const payload = JSON.stringify({
+  content: `📊 **Crypto Signal Test**
+
+BTC
+Вход: 100 000 USD
+Изход 1: 105 000 USD (+5%)
+Изход 2: 107 000 USD (+7%)
+Стоп: 99 000 USD (-1%)
+
+⏱ GitHub Actions test`
+});
+
+execSync(`curl -X POST -H "Content-Type: application/json" -d '${payload}' ${DISCORD_WEBHOOK_URL}`);
+
+console.log("Signal sent to Discord");
